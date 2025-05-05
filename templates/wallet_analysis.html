@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wallet Analysis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg,rgb(4, 21, 62), #e2e8f0);
+      color: rgb(253, 253, 253); /* Light text color for the body */
+      padding-top: 40px;
+    }
+
+    h1, h3, h4 {
+      font-weight: 700;
+    }
+
+    .table {
+      background-color: rgba(212, 210, 210, 0.93); /* White translucent background */
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #fff;
+    }
+
+    .table th {
+      color: #000 !important; /* Ensures headers are black */
+    }
+
+    .table th, .table td {
+      color: #000 !important; /* Dark text inside the table */
+      background-color: transparent !important;
+    }
+
+    .table-success th,
+    .table-success td {
+      background-color: rgb(83, 232, 142) !important; /* Dark green background */
+      color: #fff !important;
+    }
+
+    .table-danger th,
+    .table-danger td {
+      background-color: rgb(234, 85, 85) !important; /* Dark red background */
+      color: #fff !important;
+    }
+
+    ul {
+      background-color: rgb(250, 252, 255);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.05);
+    }
+
+    li {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+    }
+
+    .text-muted {
+      color: rgb(255, 255, 255) !important;
+    }
+
+    /* Custom styles for proper display */
+    .observations-container {
+      margin-top: 30px;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .observations-container h4 {
+      font-weight: 700;
+    }
+
+    .observations-container ul {
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center mb-3">📊 Wallet Behavior Analysis</h1>
+    <p class="text-center mb-5 fs-5 text-muted">Comparison of five highest and five lowest scoring wallets</p>
+
+    <h3 class="mb-3">🔝 Top 5 Wallets</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-sm align-middle">
+        <thead class="table-success">
+          <tr>
+            <th>Wallet</th>
+            <th>Score</th>
+            <th>Repay/Borrow</th>
+            <th>Deposit/Withdraw</th>
+            <th>Liquidation Ratio</th>
+            <th>Total Deposits</th>
+            <th>Total Repays</th>
+            <th># Borrows</th>
+            <th># Repays</th>
+            <th># Liquidations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in top_data %}
+          <tr>
+            <td>{{ row.wallet }}</td>
+            <td>{{ "%.4f"|format(row.normalized_score) }}</td>
+            <td>{{ "%.2f"|format(row.repay_to_borrow_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.deposit_to_withdraw_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.liquidation_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.sum_deposit) }}</td>
+            <td>{{ "%.2f"|format(row.sum_repay) }}</td>
+            <td>{{ row.count_borrow }}</td>
+            <td>{{ row.count_repay }}</td>
+            <td>{{ row.count_liquidation }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-5 mb-3">🔻 Bottom 5 Wallets</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-sm align-middle">
+        <thead class="table-danger">
+          <tr>
+            <th>Wallet</th>
+            <th>Score</th>
+            <th>Repay/Borrow</th>
+            <th>Deposit/Withdraw</th>
+            <th>Liquidation Ratio</th>
+            <th>Total Deposits</th>
+            <th>Total Repays</th>
+            <th># Borrows</th>
+            <th># Repays</th>
+            <th># Liquidations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in bottom_data %}
+          <tr>
+            <td>{{ row.wallet }}</td>
+            <td>{{ "%.4f"|format(row.normalized_score) }}</td>
+            <td>{{ "%.2f"|format(row.repay_to_borrow_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.deposit_to_withdraw_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.liquidation_ratio) }}</td>
+            <td>{{ "%.2f"|format(row.sum_deposit) }}</td>
+            <td>{{ "%.2f"|format(row.sum_repay) }}</td>
+            <td>{{ row.count_borrow }}</td>
+            <td>{{ row.count_repay }}</td>
+            <td>{{ row.count_liquidation }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="observations-container">
+      <h4>📌 Observations</h4>
+      <ul>
+        <li><strong>Top wallets</strong> show consistent and responsible financial behavior.</li>
+        <li>They maintain high repayment and deposit activity, with low liquidation risk.</li>
+        <li><strong>Bottom wallets</strong> lack repayment history and have high liquidation counts.</li>
+        <li>These insights validate the model's scoring logic and overall ranking strategy.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
